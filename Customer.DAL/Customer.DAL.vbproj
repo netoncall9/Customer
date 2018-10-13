@@ -65,7 +65,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomerDao.vb" />
+    <Compile Include="Dto\Association.vb" />
+    <Compile Include="Dto\Customer.vb" />
     <Compile Include="Dto\Department.vb" />
+    <Compile Include="Dto\ResidenceType.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -81,7 +84,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="NameDao.vb" />
+    <Compile Include="HelperDao.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="My Project\Resources.resx">

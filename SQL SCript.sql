@@ -1,7 +1,85 @@
 USE [Employee]
 GO
 
+IF EXISTS(SELECT TOP 1 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'Employee' AND TABLE_NAME = 'CustomerAssociation')
+BEGIN 
+	DROP TABLE [dbo].[CustomerAssociation]
+END
+GO
+
+CREATE TABLE [dbo].[CustomerAssociation](
+	CustomerID INT NOT NULL,
+	AssociationID INT NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	CustomerId ASC, AssociationId ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+
+IF EXISTS(SELECT TOP 1 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'Employee' AND TABLE_NAME = 'Customer')
+BEGIN 
+	DROP TABLE [dbo].[Customer]
+END
+GO
+
+
+CREATE TABLE [dbo].[Customer](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [varchar](59) NOT NULL,
+	[LastName] [varchar](59) NOT NULL,
+	[DepartmentId] INT NOT NULL,
+	IsEmployee BIT NOT NULL,
+	OwnsCar BIT NOT NULL,
+	ResidenceTypeId  INT NOT NULL
+
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+
+IF EXISTS(SELECT TOP 1 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'Employee' AND TABLE_NAME = 'Department')
+BEGIN 
+	DROP TABLE [dbo].[Department]
+END
+GO
 CREATE TABLE [dbo].[Department](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	Name [varchar](59) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+IF EXISTS(SELECT TOP 1 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'Employee' AND TABLE_NAME = 'ResidenceType')
+BEGIN 
+	DROP TABLE [dbo].[ResidenceType]
+END
+GO
+CREATE TABLE [dbo].[ResidenceType](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	Name [varchar](59) NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+IF EXISTS(SELECT TOP 1 TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_CATALOG = 'Employee' AND TABLE_NAME = 'Association')
+BEGIN 
+	DROP TABLE [dbo].[Association]
+END
+GO
+
+CREATE TABLE [dbo].[Association](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	Name [varchar](59) NOT NULL,
 PRIMARY KEY CLUSTERED 
@@ -13,39 +91,28 @@ PRIMARY KEY CLUSTERED
 
 
 
-
-/****** Object:  Table [dbo].[Customer]    Script Date: 10/12/2018 7:37:06 PM ******/
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-SET ANSI_PADDING ON
-GO
-
-CREATE TABLE [dbo].[Customer](
-	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[FirstName] [varchar](59) NOT NULL,
-	[LastName] [varchar](59) NOT NULL,
-	[DepartmentId] INT NOT NULL
-PRIMARY KEY CLUSTERED 
-(
-	[ID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-) ON [PRIMARY]
-
-
 ALTER TABLE [Customer] ADD CONSTRAINT FK_DepartmentID_Department FOREIGN KEY(DepartmentId) REFERENCES [Department](ID)
+ALTER TABLE [Customer] ADD CONSTRAINT FK_ResidenceTypeID_ResidenceType FOREIGN KEY(ResidenceTypeID) REFERENCES ResidenceType(ID)
+GO
+ALTER TABLE [CustomerAssociation] ADD CONSTRAINT FK_CustomerID_Customer FOREIGN KEY(CustomerID) REFERENCES [Customer](ID)
+ALTER TABLE [CustomerAssociation] ADD CONSTRAINT FK_AsociationId_Asociation FOREIGN KEY(AssociationID) REFERENCES [Association](ID)
+
 
 GO
-
-SET ANSI_PADDING OFF
-GO
-
 
 INSERT INTO Department values('HR1')
 INSERT INTO Department values('HR2')
 INSERT INTO Department values('HR3')
 INSERT INTO Department values('HR4')
 INSERT INTO Department values('HR5')
+
+
+INSERT INTO ResidenceType values('Rented')
+INSERT INTO ResidenceType values('Ownded')
+INSERT INTO ResidenceType values('Non-Resident')
+
+INSERT INTO Association values('A1')
+INSERT INTO Association values('A2')
+INSERT INTO Association values('A3')
+INSERT INTO Association values('A4')
+INSERT INTO Association values('A5')

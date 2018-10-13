@@ -1,12 +1,11 @@
 ﻿Imports System.Configuration
 Imports System.Data.SqlClient
 
-Public Class NameDao
+Public Class HelperDao
 
     Private connectionString As String = ConfigurationManager.ConnectionStrings("con").ConnectionString
 
-
-    Public Function SaveNames(ByVal fname As String, ByVal lname As String) As Integer
+    Public Function GetAllAssociations() As List(Of Association)
 
 
         Dim connection As SqlConnection = New SqlConnection(connectionString)
@@ -14,29 +13,24 @@ Public Class NameDao
 
         Dim command As SqlCommand = New SqlCommand()
         command.Connection = connection
-        command.CommandText = "INSERT INTO Customer VALUES(@firstname, @lastname) SELECT SCOPE_IDENTITY() "
+        command.CommandText = "SELECT Id, Name From Association "
         command.CommandType = CommandType.Text
 
-        Dim param As SqlParameter = New SqlParameter
-        param.ParameterName = "@firstname"
-        param.Value = fname
-        param.DbType = DbType.String
-
-        Dim param2 As SqlParameter = New SqlParameter
-        param2.ParameterName = "@lastname"
-        param2.Value = lname
-        param2.DbType = DbType.String
+        Dim sqlReader As SqlDataReader = command.ExecuteReader()
+        Dim list As List(Of Association) = New List(Of Association)
 
 
-        command.Parameters.Add(param)
-        command.Parameters.Add(param2)
+        While sqlReader.Read()
 
+            Dim dp As Association = New Association With {
+                .ID = sqlReader.GetInt32(0),
+                .Name = sqlReader.GetString(1)
+            }
+            list.Add(dp)
 
-        Dim id As Integer = CInt(command.ExecuteScalar())
+        End While
 
-        connection.Close()
-
-        Return id
+        Return list
 
     End Function
 
@@ -74,4 +68,34 @@ Public Class NameDao
 
     End Function
 
+    Public Function GetAllResidenceTypes() As List(Of ResidenceType)
+
+
+        Dim connection As SqlConnection = New SqlConnection(connectionString)
+        connection.Open()
+
+        Dim command As SqlCommand = New SqlCommand()
+        command.Connection = connection
+        command.CommandText = "SELECT Id, Name From ResidenceType "
+        command.CommandType = CommandType.Text
+
+        Dim sqlReader As SqlDataReader = command.ExecuteReader()
+        Dim list As List(Of ResidenceType) = New List(Of ResidenceType)
+
+
+        While sqlReader.Read()
+
+            Dim dp As ResidenceType = New ResidenceType With {
+                .ID = sqlReader.GetInt32(0),
+                .Name = sqlReader.GetString(1)
+            }
+            list.Add(dp)
+
+        End While
+
+        Return list
+
+    End Function
+
 End Class
+
