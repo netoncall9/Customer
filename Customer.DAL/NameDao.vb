@@ -40,6 +40,38 @@ Public Class NameDao
 
     End Function
 
+    Public Function GetAllDepartments() As List(Of Department)
 
+
+        Dim connection As SqlConnection = New SqlConnection(connectionString)
+        connection.Open()
+
+        Dim command As SqlCommand = New SqlCommand()
+        command.Connection = connection
+        command.CommandText = "SELECT Id, Name From Department "
+        command.CommandType = CommandType.Text
+
+        Dim sqlReader As SqlDataReader = command.ExecuteReader()
+        Dim deptList As List(Of Department) = New List(Of Department)
+
+
+        While sqlReader.Read()
+
+            'Dim dp As Department = New Department
+            'dp.ID = sqlReader.GetInt32(0)
+            'dp.Name = sqlReader.GetString(1)
+            'deptList.Add(dp)
+
+            Dim dp As Department = New Department With {
+                .ID = sqlReader.GetInt32(0),
+                .Name = sqlReader.GetString(1)
+            }
+            deptList.Add(dp)
+
+        End While
+
+        Return deptList
+
+    End Function
 
 End Class
